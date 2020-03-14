@@ -157,6 +157,11 @@ def plot_data(ts):
 	max_est = np.amax(ts['estimated'])
 	plot_max = 1.25 * max_est
 
+	max_reported = np.amax(ts['confirmed'])
+	max_date = np.amax(ts['dates'])
+	
+	plt.annotate(max_reported, (max_date, max_reported))
+
 	plt.ylim(0, plot_max)
 	plt.xlabel("Day of Year")
 	plt.ylabel("# People")

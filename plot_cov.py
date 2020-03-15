@@ -147,25 +147,35 @@ def get_timeseries(country, region=[]):
 
 	return ts
 
-def plot_data(ts):
+def plot_data(ts, location_str):
 	plt.clf()
 	plt.plot(ts['dates'], ts['deaths'], 'r-', ts['dates'], ts['confirmed'], 'g-', ts['dates'], ts['estimated'], 'k-.')
 	plt.hlines(100, ts['dates'][0], ts['dates'][len(ts['dates'])-1], 'k', 'dotted')
 	plt.hlines(1000, ts['dates'][0], ts['dates'][len(ts['dates'])-1], 'r', 'dotted')
 	plt.hlines(5000, ts['dates'][0], ts['dates'][len(ts['dates'])-1], 'r')
-	
+
+
+	# Get most recent numbers	
 	max_est = np.amax(ts['estimated'])
 	plot_max = 1.25 * max_est
 
-	max_reported = np.amax(ts['confirmed'])
-	max_date = np.amax(ts['dates'])
+	last_reported = ts['confirmed'][len(ts['confirmed'])-1]
+	last_date = np.amax(ts['dates'])
 	
-	plt.annotate(max_reported, (max_date, max_reported))
+	plt.annotate(last_reported, (last_date, last_reported))
 
+
+	# Make sure timeline is up to date
+	now = dt.datetime.now()
+	today = now.strftime("%m-%d-%Y, %H:%M:%S")
+	doy_today = datestr_to_doy(today)
+
+	plt.xlim(0, doy_today)
 	plt.ylim(0, plot_max)
 	plt.xlabel("Day of Year")
 	plt.ylabel("# People")
 	plt.legend(['Deaths', 'Confirmed Cases', 'Estimated Cases'])
+	plt.title(location_str+" - day "+str(doy_today)+" - @ "+str(last_reported))
 
 	return plt
 
@@ -174,25 +184,25 @@ if __name__ == "__main__":
 
 
 	ts_US = get_timeseries("US")
+	ts_IT = get_timeseries("Italy")
 	ts_CA = get_timeseries("US", ["California"])
 	ts_Bay = get_timeseries("US", bay_area_cities)
-	ts_NY = get_timeseries("US", ["New York County, NY"])
+	ts_NY = get_timeseries("US", ["New York"])
 
-	plt_US = plot_data(ts_US)
-	plt_US.title("US")
+	plt_US = plot_data(ts_US, "US")
 	plt_US.savefig("US.jpeg", dpi=300)
+
+	plt_IT = plot_data(ts_IT, "Italy")
+	plt_IT.savefig("Italy.jpeg", dpi=300)	
 	
-	plt_CA = plot_data(ts_CA)
-	plt_CA.title("US, CA")
+	plt_CA = plot_data(ts_CA, "US, CA")
 	plt_CA.savefig("CA.jpeg", dpi=300)
 	
-	plt_NY = plot_data(ts_NY)
-	plt_NY.title("US, NY")
+	plt_NY = plot_data(ts_NY, "US, NY")
 	plt_NY.savefig("NY.jpeg", dpi=300)
 	
 
-	plt_Bay = plot_data(ts_Bay)
-	plt_Bay.title("US, Bay Area")
+	plt_Bay = plot_data(ts_Bay, "US, Bay Area")
 	plt_Bay.savefig("Bay.jpeg", dpi=300)
 
 	#plt.subplot(311)

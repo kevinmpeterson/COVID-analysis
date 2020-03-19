@@ -188,6 +188,10 @@ if __name__ == "__main__":
 	ts_CA = get_timeseries("US", ["California"])
 	ts_Bay = get_timeseries("US", bay_area_cities)
 	ts_NY = get_timeseries("US", ["New York"])
+	ts_NJ = get_timeseries("US", ["New Jersey"])
+	ts_WA = get_timeseries("US", ["Washington"])
+
+
 
 	plt_US = plot_data(ts_US, "US")
 	plt_US.savefig("US.jpeg", dpi=300)
@@ -200,6 +204,12 @@ if __name__ == "__main__":
 	
 	plt_NY = plot_data(ts_NY, "US, NY")
 	plt_NY.savefig("NY.jpeg", dpi=300)
+	
+	plt_NY = plot_data(ts_NJ, "US, NJ")
+	plt_NY.savefig("NJ.jpeg", dpi=300)
+	
+	plt_NY = plot_data(ts_WA, "US, WA")
+	plt_NY.savefig("WA.jpeg", dpi=300)
 	
 
 	plt_Bay = plot_data(ts_Bay, "US, Bay Area")
